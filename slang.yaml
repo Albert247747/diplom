@@ -1,0 +1,6 @@
+base_locale: ru
+fallback: ru
+input_directory: assets/i18n
+input_file_pattern: .yaml
+output_directory: lib/utils
+output_file_name: translations.g.dart

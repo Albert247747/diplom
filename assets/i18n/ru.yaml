@@ -1,0 +1,26 @@
+signIn:
+  title: "Вход"
+  email: "Email"
+  password: "Password"
+  showText: "показать"
+
+error:
+  workerInWebError: "Ошибка.Данная роль не походит для авторизации на web-сайте.Пожалуйста войдите через приложение."
+  adminInWebError: "Ошибка.Данная роль не походит для авторизации в приложении .Пожалуйста войдите через web-сайт."
+
+downloadMobileApp:
+  downloadApp: "Скачать мобильное приложение"
+
+web:
+  userInfo: "Информация о сотруднике"
+  listWorker: "Список сотрудников"
+  addWorker: "Добавить нового сотрудника"
+  createWorker:
+    email: "Email"
+    password: "Password"
+    name: "Имя"
+    lastName: "Фамилия"
+    surname: "Отчество"
+    role: "Должность"
+    save: "Сохранить"
+    delete: "Удалить"

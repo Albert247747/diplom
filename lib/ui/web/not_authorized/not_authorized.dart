@@ -1,5 +1,5 @@
 import 'package:diplom/ui/common/theme/colors.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:diplom/utils/translations.g.dart';
 import 'package:flutter/material.dart';
 
 class NotAuthorized extends StatelessWidget {
@@ -31,7 +31,7 @@ class NotAuthorized extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    'Dashboard',
+                    context.t.signIn.dashboard,
                     style: TextStyle(
                       color: blackColor,
                       fontWeight: FontWeight.bold,
@@ -40,20 +40,14 @@ class NotAuthorized extends StatelessWidget {
                   ),
                   SizedBox(height: 62),
                   Text(
-                    'Данная роль не подходит для авторизации на web-сайте.',
+                    context.t.web.notAuthorizedMessage,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: blackColor,
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(color: blackColor, fontSize: 20),
                   ),
                   Text(
-                    'Пожалуйста войдите через мобильное приложение.',
+                    context.t.web.openMobileAppMessage,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: blackColor,
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(color: blackColor, fontSize: 20),
                   ),
                   SizedBox(height: 62),
                   SizedBox(
@@ -71,7 +65,7 @@ class NotAuthorized extends StatelessWidget {
                           backgroundColor: mainGreen,
                         ),
                         child: Text(
-                          'Назад',
+                          context.t.web.back,
                           style: TextStyle(color: whiteColor),
                         ),
                       ),

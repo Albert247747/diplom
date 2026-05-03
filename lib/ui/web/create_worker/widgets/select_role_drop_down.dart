@@ -1,3 +1,5 @@
+import 'package:diplom/ui/common/theme/style_text.dart';
+import 'package:diplom/utils/translations.g.dart';
 import 'package:flutter/material.dart';
 import '../../../common/theme/colors.dart';
 
@@ -8,7 +10,7 @@ class SelectRoleDropDown extends StatefulWidget {
     required this.onRoleChanged,
   });
 
-  final String selectedRole;
+  final String? selectedRole;
   final ValueChanged<String?> onRoleChanged;
 
   @override
@@ -20,16 +22,42 @@ class _SelectRoleDropDownState extends State<SelectRoleDropDown> {
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      const Text(
-        'Role',
+      Text(
+        context.t.web.createWorker.role,
         style: TextStyle(color: greenText, fontWeight: FontWeight.bold),
       ),
-      const SizedBox(height: 8),
       DropdownButtonFormField<String>(
+        isDense: true,
         value: widget.selectedRole,
-        items: const [
-          DropdownMenuItem(value: 'admin', child: Text('admin')),
-          DropdownMenuItem(value: 'worker', child: Text('worker')),
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        items: [
+          DropdownMenuItem(
+            value: 'bartender',
+            child: Text(
+              context.t.web.createWorker.roles.bartender,
+              style: context.bodyMedium,
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'waiter',
+            child: Text(
+              context.t.web.createWorker.roles.waiter,
+              style: context.bodyMedium,
+            ),
+          ),
+          DropdownMenuItem(
+            value: 'cook',
+            child: Text(
+              context.t.web.createWorker.roles.cook,
+              style: context.bodyMedium,
+            ),
+          ),
         ],
         onChanged: (value) {
           widget.onRoleChanged(value);

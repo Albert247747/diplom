@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:diplom/data/data_provider/create_worker_data_provider/create_worker_data_provider.dart';
 
 class CreateWorkerRepository {
@@ -9,15 +7,15 @@ class CreateWorkerRepository {
     required CreateWorkerDataProvider createWorkerDataProvider,
   }) : _dataProvider = createWorkerDataProvider;
 
-  Future<void> saveWorker ({
+  Future<void> saveWorker({
     required Map<String, dynamic> userData,
     required String email,
     required String password,
   }) async {
     await _dataProvider.createWorker(
-      dataUser:  userData,
+      dataUser: userData,
       email: email,
-      password: password
+      password: password,
     );
   }
 }

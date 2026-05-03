@@ -6,35 +6,34 @@ class CreateWorkerCubit extends Cubit<CreateWorkerState> {
   final CreateWorkerRepository _repository;
 
   CreateWorkerCubit(CreateWorkerRepository repository)
-      : _repository = repository,
-        super(InitialState());
+    : _repository = repository,
+      super(InitialState());
 
-      Future<void> createWorker(
-          String email,
-          String password,
-          String role,
-          String name,
-          String lastName,
-          String surname
-          ) async {
-        emit(LoadingState());
-        try{
-          final Map<String, dynamic> user = {
-            'email': email,
-            'role': role,
-            'name': name,
-            'lastName': lastName,
-            'surname': surname
-          };
-        await _repository.saveWorker(
-          email: email,
-          userData: user,
-            password: password
-        );
-        emit(SuccessState());
-        } catch (e){
-          emit(ErrorState(messageError: 'Ошибки создания'));
-          Exception(e);
-        }
-      }
+  Future<void> createWorker(
+    String email,
+    String password,
+    String role,
+    String name,
+    String lastName,
+    String surname,
+  ) async {
+    emit(LoadingState());
+    try {
+      final Map<String, dynamic> user = {
+        'email': email,
+        'role': role,
+        'name': name,
+        'lastName': lastName,
+        'surname': surname,
+      };
+      await _repository.saveWorker(
+        email: email,
+        userData: user,
+        password: password,
+      );
+      emit(SuccessState());
+    } catch (e) {
+      emit(ErrorState(messageError: e.toString()));
+    }
+  }
 }

@@ -6,6 +6,7 @@ import '../../common/theme/colors.dart';
 import '../../common/theme/style_text.dart';
 import '../create_event/create_event.dart';
 import '../create_worker/create_worker.dart';
+import '../shifts_list/shifts_list.dart';
 
 class AdminPanel extends StatelessWidget {
   const AdminPanel({super.key});
@@ -73,6 +74,35 @@ class AdminPanel extends StatelessWidget {
                       ),
                     ],
                   ),
+                  SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CardButton(
+                          text: context.t.web.listWorker,
+                          onTap:  () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShiftsList(),
+                            ),
+                          ),
+                          /// TODO поправиьт иконку
+                          iconPath: "icons/icons_list_users.svg",
+                      ),
+                      SizedBox(width: 15,),
+                      CardButton(
+                          text: context.t.web.eventList,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShiftsList(),
+                          ),
+                        ),
+                        /// TODO поправиьт иконку
+                        iconPath: "icons/icons_list_users.svg",
+                      )
+                    ],
+                  )
                 ],
               ),
             ],

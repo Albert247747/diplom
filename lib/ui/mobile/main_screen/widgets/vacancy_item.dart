@@ -1,9 +1,29 @@
 import 'package:diplom/ui/common/theme/colors.dart';
+import 'package:diplom/ui/common/theme/style_text.dart';
 import 'package:diplom/utils/translations.g.dart';
 import 'package:flutter/material.dart';
 
 class VacancyItem extends StatelessWidget {
-  const VacancyItem({super.key});
+  const VacancyItem({
+    required this.timing,
+    required this.dateEvent,
+    required this.salary,
+    required this.assignedEmployeesCount,
+    required this.requiredEmployeesCount,
+    super.key,
+  });
+
+  final String salary;
+
+  final String dateEvent;
+
+  final String timing;
+
+  final String assignedEmployeesCount;
+
+  final String requiredEmployeesCount;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +37,69 @@ class VacancyItem extends StatelessWidget {
         child: Column(
           children: [
             RowBloc(
-              rightText: Text(context.t.mobile.vacancy.role),
-              leftText: Text(context.t.mobile.vacancy.salary),
+              leftText: Text(
+                context.t.mobile.vacancy.role,
+                style: context.bodyMedium.copyWith(
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+              rightText: Text(
+                  salary,
+                  style: context.bodyMedium.copyWith(
+                      fontWeight: FontWeight.bold
+                  )
+              ),
             ),
             RowBloc(
-              rightText: Text(context.t.mobile.vacancy.date),
-              leftText: Text(context.t.mobile.vacancy.time),
+                leftText: Text(
+                    dateEvent,
+                    style: context.bodyMedium.copyWith(
+                      fontWeight: FontWeight.w300,
+                      color: greyText
+                    ),
+                ),
+                rightText: Text(
+                    timing,
+                    style: context.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w300,
+                      color: greyText
+                    )
+                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
+              child: Row(
+                children: [
+                  Text(
+                      context.t.mobile.vacancy.seats,
+                      style: context.bodyMedium.copyWith(
+                        color: greenText,
+                        fontWeight: FontWeight.w600
+                      ),
+                  ),
+                  Spacer(),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: assignedEmployeesCount,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: mainGreen,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '/$requiredEmployeesCount',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w300,
+                            color: mainGreen,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

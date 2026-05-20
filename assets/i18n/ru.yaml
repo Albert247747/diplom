@@ -33,8 +33,11 @@ web:
   listWorker: "Список сотрудников"
   addWorker: "Добавить нового сотрудника"
   adminPanel: "Панель администратора"
-  createWorkerButton: "Создать работника"
+  createWorkerButton: "Создать сотрудника"
   createEventButton: "Создать мероприятие"
+  eventList: "Список мероприятий"
+  workerList: "Список мероприятий"
+
   notAuthorizedMessage: "Данная роль не подходит для авторизации на web-сайте."
   openMobileAppMessage: "Пожалуйста войдите через мобильное приложение."
   back: "Назад"
@@ -83,6 +86,15 @@ mobile:
     salary: "Зп"
     date: "Дата"
     time: "Время"
+    seats: "мест"s
+    booking: "Бронирование"
+    requirements: "Требования:"
+    comment: "Комментарии:"
+    book: "Забронировать"
+    successShift: "Ваша смена забронирована"
+    ok: "Ок"
+    profile: "Профиль"
+    post: "Должность:"
 
 validation:
   enterEmail: "Введите email"

@@ -90,6 +90,7 @@ class _SignInMobileViewState extends State<SignInMobileView> {
                 ),
                 SizedBox(height: 46),
                 BaseButton(
+                  borderRadius: BorderRadius.circular(60),
                   backgroundColor: greenButtonMain,
                   onPressed: _onLoginPressed,
                   width: double.infinity,

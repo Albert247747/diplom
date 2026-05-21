@@ -1,8 +1,10 @@
 import 'package:diplom/data/repositories/auth_repositories/auth_repositories.dart';
+import 'package:diplom/data/repositories/home_repository/home_repository.dart';
 import 'package:diplom/ui/common/bloc/auth/auth_cubit.dart';
 import 'package:diplom/ui/common/bloc/auth/auth_state.dart';
 import 'package:diplom/ui/common/enums/device_type.dart';
 import 'package:diplom/ui/common/theme/colors.dart';
+import 'package:diplom/ui/mobile/main_screen/bloc/home_cubit.dart';
 import 'package:diplom/ui/mobile/main_screen/main_screen.dart';
 import 'package:diplom/ui/mobile/not_autorized/not_autorized.dart';
 import 'package:diplom/ui/web/home_admin_panel/home_admin_panel.dart';
@@ -34,7 +36,7 @@ class AuthGate extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.errorMessage ?? state.errorCode),
-                  backgroundColor: errorColor,
+                  backgroundColor: redColor,
                 ),
               );
             }
@@ -43,7 +45,7 @@ class AuthGate extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(context.t.error.platformRoleError),
-                  backgroundColor: errorColor,
+                  backgroundColor: redColor,
                 ),
               );
               context.read<CubitAuth>().logout();
@@ -53,7 +55,13 @@ class AuthGate extends StatelessWidget {
             if (state is LoginSuccess) {
               if (platform == UserPlatform.mobile) {
                 return state.users.isWorker
-                    ? MainScreen()
+                    ? BlocProvider(
+                  create: (_) => HomeCubit(
+                    HomeRepository(
+                      provider: FirebaseDataProvider()
+                    )
+                  ),
+                    child: MainScreen())
                     : NotAuthorizedMobile();
               } else {
                 return state.users.isAdmin ? AdminPanel() : NotAuthorized();

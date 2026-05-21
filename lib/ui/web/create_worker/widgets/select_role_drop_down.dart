@@ -28,7 +28,7 @@ class _SelectRoleDropDownState extends State<SelectRoleDropDown> {
       ),
       DropdownButtonFormField<String>(
         isDense: true,
-        value: widget.selectedRole,
+        initialValue: widget.selectedRole,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 12,

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 class VacancyItem extends StatelessWidget {
   const VacancyItem({
+    required this.title,
+    required this.role,
     required this.timing,
     required this.dateEvent,
     required this.salary,
@@ -15,6 +17,10 @@ class VacancyItem extends StatelessWidget {
 
   final String salary;
 
+  final String title;
+
+  final String role;
+
   final String dateEvent;
 
   final String timing;
@@ -22,8 +28,6 @@ class VacancyItem extends StatelessWidget {
   final String assignedEmployeesCount;
 
   final String requiredEmployeesCount;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,46 +40,54 @@ class VacancyItem extends StatelessWidget {
         padding: const EdgeInsets.only(top: 24),
         child: Column(
           children: [
-            RowBloc(
-              leftText: Text(
-                context.t.mobile.vacancy.role,
-                style: context.bodyMedium.copyWith(
-                  fontWeight: FontWeight.bold
-                ),
-              ),
-              rightText: Text(
-                  salary,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 18),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  title,
                   style: context.bodyMedium.copyWith(
-                      fontWeight: FontWeight.bold
-                  )
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
             RowBloc(
-                leftText: Text(
-                    dateEvent,
-                    style: context.bodyMedium.copyWith(
-                      fontWeight: FontWeight.w300,
-                      color: greyText
-                    ),
+              leftText: Text(
+                role.isEmpty ? context.t.mobile.vacancy.role : role,
+                style: context.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+              ),
+              rightText: Text(
+                salary,
+                style: context.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            RowBloc(
+              leftText: Text(
+                dateEvent,
+                style: context.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w300,
+                  color: greyText,
                 ),
-                rightText: Text(
-                    timing,
-                    style: context.bodyMedium.copyWith(
-                        fontWeight: FontWeight.w300,
-                      color: greyText
-                    )
+              ),
+              rightText: Text(
+                timing,
+                style: context.bodyMedium.copyWith(
+                  fontWeight: FontWeight.w300,
+                  color: greyText,
                 ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
               child: Row(
                 children: [
                   Text(
-                      context.t.mobile.vacancy.seats,
-                      style: context.bodyMedium.copyWith(
-                        color: greenText,
-                        fontWeight: FontWeight.w600
-                      ),
+                    context.t.mobile.vacancy.seats,
+                    style: context.bodyMedium.copyWith(
+                      color: greenText,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Spacer(),
                   Text.rich(

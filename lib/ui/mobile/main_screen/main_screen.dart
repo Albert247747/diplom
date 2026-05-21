@@ -1,9 +1,17 @@
+import 'package:diplom/domain/models/event/event_model.dart';
 import 'package:diplom/ui/common/theme/colors.dart';
 import 'package:diplom/ui/mobile/detail_vacancy/detail_vacancy.dart';
+import 'package:diplom/ui/mobile/main_screen/bloc/home_cubit.dart';
 import 'package:diplom/ui/mobile/main_screen/widgets/profile.dart';
 import 'package:diplom/ui/mobile/main_screen/widgets/vacancy_item.dart';
 import 'package:diplom/utils/translations.g.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../sign_in_mobile/auth_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,7 +21,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   int currentIndex = 0;
 
   final List<Widget> pages = [
@@ -25,58 +32,79 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: mainBackground,
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
 
-      body: pages[currentIndex],
+      builder: (context, snapshot) {
+        // loading
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: whiteColor,
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
+        if (!snapshot.hasData) {
+          return const SignInMobile();
+        }
 
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          type: BottomNavigationBarType.fixed,
+        // если пользователь авторизован
+        return Scaffold(
+          backgroundColor: mainBackground,
 
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
+          body: pages[currentIndex],
 
-          selectedItemColor: mainGreen,
-          unselectedItemColor: Colors.grey,
+          bottomNavigationBar: Container(
+            margin: const EdgeInsets.all(16),
 
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
-              label: '',
+            decoration: BoxDecoration(
+              color: whiteColor,
+              borderRadius: BorderRadius.circular(25),
             ),
 
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_rounded),
-              label: '',
-            ),
+            child: BottomNavigationBar(
+              currentIndex: currentIndex,
 
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat_rounded),
-              label: '',
-            ),
+              onTap: (index) {
+                setState(() {
+                  currentIndex = index;
+                });
+              },
 
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_rounded),
-              label: '',
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              type: BottomNavigationBarType.fixed,
+
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+
+              selectedItemColor: mainGreen,
+              unselectedItemColor: Colors.grey,
+
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_rounded),
+                  label: '',
+                ),
+
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite_rounded),
+                  label: '',
+                ),
+
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.chat_rounded),
+                  label: '',
+                ),
+
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_rounded),
+                  label: '',
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -92,56 +120,63 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           context.t.mobile.shifts,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-          ),
+
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
+
         backgroundColor: mainBackground,
       ),
 
       body: Padding(
         padding: const EdgeInsets.only(right: 20, left: 20),
 
-        child: ListView.builder(
-          itemCount: 10,
+        child: StreamBuilder<List<EventModel>>(
+          stream: context.read<HomeCubit>().watchWorkerEvents(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
+            if (snapshot.hasError) {
+              return Center(child: Text(snapshot.error.toString()));
+            }
 
-                GestureDetector(
+            final events = snapshot.data ?? const <EventModel>[];
+
+            if (events.isEmpty) {
+              return const Center(child: Text('Пока нет доступных смен'));
+            }
+
+            return ListView.separated(
+              itemCount: events.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 15),
+              itemBuilder: (context, index) {
+                final event = events[index];
+
+                return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const DetailVacancy(
-                          post: 'Официант',
-                          price: 2000,
-                          date: '11.10.2026',
-                          time: '11:00 - 23:45',
-                          totalUser: 12,
-                          currentUser: 2,
-                          comment:
-                          'Работаем быстро. Гости максимально придирчивые и требовательные.',
-                          requirements:
-                          'дресс-код(рубашка, брюки, темная обувь)',
-                        ),
+                        builder:
+                            (_) => BlocProvider.value(
+                              value: context.read<HomeCubit>(),
+                              child: DetailVacancy(event: event),
+                            ),
                       ),
                     );
                   },
-
-                  child: const VacancyItem(
-                    timing: '12:00 - 00:00',
-                    dateEvent: '12.10.26',
-                    salary: '1000',
-                    assignedEmployeesCount: '5',
-                    requiredEmployeesCount: '10',
+                  child: VacancyItem(
+                    title: event.title,
+                    role: event.roleTitle,
+                    timing: event.formattedTime,
+                    dateEvent: event.formattedDate,
+                    salary: '${event.salary} руб/час',
+                    assignedEmployeesCount: event.assignedCount.toString(),
+                    requiredEmployeesCount: event.workerCount.toString(),
                   ),
-                ),
-
-                const SizedBox(height: 15),
-              ],
+                );
+              },
             );
           },
         ),

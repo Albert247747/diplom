@@ -39,7 +39,7 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = widget.hasError ? errorColor : mainGreen;
+    final borderColor = widget.hasError ? redColor : mainGreen;
 
     return TextField(
       controller: widget.controller,
@@ -88,12 +88,12 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
 
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: errorColor),
+          borderSide: const BorderSide(color: redColor),
         ),
 
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: errorColor, width: 1),
+          borderSide: const BorderSide(color: redColor, width: 1),
         ),
       ),
     );

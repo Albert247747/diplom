@@ -44,11 +44,11 @@ class _BaseTextFieldWidgetState extends State<BaseTextFieldWidget> {
       controller: widget.controller,
       decoration: InputDecoration(
         filled: true,
-        fillColor: widget.hasError ? errorColor : null,
+        fillColor: widget.hasError ? redColor : null,
         enabledBorder:
-            widget.hasError ? _buildErrorBorder(context, errorColor) : null,
+            widget.hasError ? _buildErrorBorder(context, redColor) : null,
         focusedBorder:
-            widget.hasError ? _buildErrorBorder(context, errorColor) : null,
+            widget.hasError ? _buildErrorBorder(context, redColor) : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(100),
           borderSide: BorderSide(color: whiteColor),

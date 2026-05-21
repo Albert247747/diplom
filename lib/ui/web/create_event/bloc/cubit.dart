@@ -34,6 +34,8 @@ class CreateEventCubit extends Cubit<CreateEventState> {
         'workerCount': workerCount,
         'salary': salary,
         'status': 'open',
+        'assignedWorkerIds': <String>[],
+        'assignedWorkers': <Map<String, dynamic>>[],
         'createdAt': FieldValue.serverTimestamp(),
       };
 

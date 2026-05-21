@@ -1,5 +1,7 @@
 import 'package:diplom/ui/common/theme/colors.dart';
+import 'package:diplom/ui/mobile/main_screen/bloc/home_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../utils/translations.g.dart';
 
@@ -17,6 +19,25 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          context.t.mobile.vacancy.profile,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        backgroundColor: mainBackground,
+        actions: [
+          IconButton(
+              onPressed: () async {
+              context.read<HomeCubit>().logout();
+              },
+              icon: Icon(Icons.logout,
+              color: redColor,)
+          )
+        ],
+      ),
       backgroundColor: const Color(0xFFF2F2F2),
       body: SafeArea(
         child: Padding(
@@ -24,22 +45,6 @@ class Profile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    context.t.mobile.vacancy.profile,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
               const SizedBox(height: 40),
               Center(
                 child: Container(
@@ -47,7 +52,7 @@ class Profile extends StatelessWidget {
                   height: 90,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(0xFFE0E0E0),
+                    color: mainBackground,
                   ),
                   child: const Icon(
                     Icons.person,

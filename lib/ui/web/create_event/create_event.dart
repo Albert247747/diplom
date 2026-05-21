@@ -86,7 +86,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                 state.messageError ?? context.t.web.createEvent.genericError,
                 style: TextStyle(color: Colors.white),
               ),
-              backgroundColor: errorColor,
+              backgroundColor: redColor,
             ),
           );
         }
@@ -166,7 +166,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                             value:
                                 _startTime == null
                                     ? context.t.web.createEvent.selectTime
-                                    : _startTime!.format(context),
+                                    : _formatTime(_startTime!),
                             onPressed: () => _pickTime(isStart: true),
                           ),
                         ),
@@ -177,7 +177,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                             value:
                                 _endTime == null
                                     ? context.t.web.createEvent.selectTime
-                                    : _endTime!.format(context),
+                                    : _formatTime(_endTime!),
                             onPressed: () => _pickTime(isStart: false),
                           ),
                         ),
@@ -306,6 +306,12 @@ class _CreateEventViewState extends State<CreateEventView> {
       context: context,
       initialTime:
           isStart ? _startTime ?? TimeOfDay.now() : _endTime ?? TimeOfDay.now(),
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
 
     if (time == null) return;
@@ -388,6 +394,12 @@ class _CreateEventViewState extends State<CreateEventView> {
     final day = date.day.toString().padLeft(2, '0');
     final month = date.month.toString().padLeft(2, '0');
     return '$day.$month.${date.year}';
+  }
+
+  String _formatTime(TimeOfDay time) {
+    final hour = time.hour.toString().padLeft(2, '0');
+    final minute = time.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 
   DateTime _combineDateAndTime(DateTime date, TimeOfDay time) {

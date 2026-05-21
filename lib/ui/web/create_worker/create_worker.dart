@@ -3,7 +3,6 @@ import 'package:diplom/data/data_provider/create_worker_data_provider/create_wor
 import 'package:diplom/data/repositories/create_worker_repositories/create_worker_data_repository.dart';
 import 'package:diplom/ui/common/theme/colors.dart';
 import 'package:diplom/ui/common/widgets/button/button.dart';
-import 'package:diplom/ui/common/widgets/text_fields/base_text_field.dart';
 import 'package:diplom/ui/web/create_worker/bloc/cubit.dart';
 import 'package:diplom/ui/web/create_worker/bloc/state.dart';
 import 'package:diplom/ui/web/create_worker/widgets/select_role_drop_down.dart';
@@ -80,7 +79,7 @@ class _CreateWorkerViewState extends State<CreateWorkerView> {
                 state.messageError ?? context.t.web.createWorker.genericError,
                 style: TextStyle(color: Colors.white),
               ),
-              backgroundColor: errorColor,
+              backgroundColor: redColor,
             ),
           );
         }
@@ -231,9 +230,10 @@ class _CreateWorkerViewState extends State<CreateWorkerView> {
                                 );
                               }
                             },
-                            child: Text(context.t.web.createWorker.submit,
-                              style: TextStyle(color: whiteColor),),
-
+                            child: Text(
+                              context.t.web.createWorker.submit,
+                              style: TextStyle(color: whiteColor),
+                            ),
                           ),
                         ],
                       ),

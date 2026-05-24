@@ -8,8 +8,8 @@ signIn:
   passwordHint: "Пароль"
 
 error:
-  workerInWebError: "Ошибка.Данная роль не походит для авторизации на web-сайте.Пожалуйста войдите через приложение."
-  adminInWebError: "Ошибка.Данная роль не походит для авторизации в приложении .Пожалуйста войдите через web-сайт."
+  workerInWebError: "Данная роль недоступна в веб-приложении."
+  adminInWebError: "Данная роль доступна только для сотрудников."
   authorizationError: "Ошибка авторизации, попробуйте снова"
   webAuthorizationError: "Ошибка авторизации, попробуйте снова"
   platformRoleError: "Данная роль не подходит для этой платформы"
@@ -38,8 +38,9 @@ web:
   eventList: "Список мероприятий"
   workerList: "Список мероприятий"
 
-  notAuthorizedMessage: "Данная роль не подходит для авторизации на web-сайте."
+  notAuthorizedMessage: "Данная роль недоступна в веб-приложении."
   openMobileAppMessage: "Пожалуйста войдите через мобильное приложение."
+  openWebSiteMessage: "Пожалуйста перейдите на сайт."
   back: "Назад"
   createWorker:
     email: "Email"
@@ -81,12 +82,23 @@ web:
 
 mobile:
   shifts: "Смены"
+  registrationStepper:
+    title: "Перед регистрацией"
+    stepOneTitle: "Заполните профиль"
+    stepOneDescription: "Укажите email и пароль, чтобы получить доступ к мобильному приложению."
+    stepTwoTitle: "Дождитесь подтверждения"
+    stepTwoDescription: "Администратор проверит данные сотрудника и назначит вашу роль."
+    stepThreeTitle: "Выбирайте смены"
+    stepThreeDescription: "После входа бронируйте доступные смены и отслеживайте детали мероприятий."
+    next: "Далее"
+    skip: "Пропустить"
+    start: "Перейти к регистрации"
   vacancy:
     role: "Должность"
     salary: "Зп"
     date: "Дата"
     time: "Время"
-    seats: "мест"s
+    seats: "мест"
     booking: "Бронирование"
     requirements: "Требования:"
     comment: "Комментарии:"

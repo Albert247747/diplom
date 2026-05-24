@@ -6,6 +6,7 @@ import '../../common/theme/style_text.dart';
 import '../create_event/create_event.dart';
 import '../create_worker/create_worker.dart';
 import '../shifts_list/shifts_list.dart';
+import '../worker_list/worker_list.dart';
 
 class AdminPanel extends StatelessWidget {
   const AdminPanel({super.key});
@@ -31,10 +32,20 @@ class AdminPanel extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Positioned.fill(
-                child: Center(
-                  child: Image.asset(
-                    "assets/images/hotel.png",
-                    fit: BoxFit.fill,
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          "assets/images/hotel.png",
+                          fit: BoxFit.cover,
+                        ),
+                        Container(color: Colors.black.withValues(alpha: 0.35)),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -51,57 +62,64 @@ class AdminPanel extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CardButton(
-                          text: context.t.web.createWorkerButton,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateWorkerPage(),
+                        text: context.t.web.listWorker,
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => WorkerList(),
+                              ),
                             ),
-                          ),
-                          iconPath: "icons/icons_add_users.svg"
+
+                        /// TODO поправить иконку
+                        iconPath: "assets/icons/icons_list_users.svg",
                       ),
-                      SizedBox(width: 15,),
+                      SizedBox(width: 15),
                       CardButton(
-                          text: context.t.web.createEventButton,
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CreateEventPage(),
+                        text: context.t.web.createWorkerButton,
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateWorkerPage(),
+                              ),
                             ),
-                          ),
-                          iconPath: "icons/icons_list_users.svg",
+                        iconPath: "assets/icons/icons_add_users.svg",
                       ),
+                      SizedBox(width: 15),
                     ],
                   ),
-                  SizedBox(height: 15,),
+                  SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CardButton(
-                          text: context.t.web.listWorker,
-                          onTap:  () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShiftsList(),
+                        text: context.t.web.createEventButton,
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateEventPage(),
+                              ),
                             ),
-                          ),
-                          /// TODO поправиьт иконку
-                          iconPath: "icons/icons_list_users.svg",
+                        iconPath: "assets/icons/icons_list_users.svg",
                       ),
-                      SizedBox(width: 15,),
+                      SizedBox(width: 15),
                       CardButton(
-                          text: context.t.web.eventList,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShiftsList(),
-                          ),
-                        ),
+                        text: context.t.web.eventList,
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ShiftsList(),
+                              ),
+                            ),
+
                         /// TODO поправиьт иконку
-                        iconPath: "icons/icons_list_users.svg",
-                      )
+                        iconPath: "assets/icons/icons_list_users.svg",
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ],

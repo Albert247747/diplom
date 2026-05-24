@@ -7,9 +7,9 @@ import 'package:diplom/ui/common/theme/colors.dart';
 import 'package:diplom/ui/mobile/main_screen/bloc/home_cubit.dart';
 import 'package:diplom/ui/mobile/main_screen/main_screen.dart';
 import 'package:diplom/ui/mobile/not_autorized/not_autorized.dart';
+import 'package:diplom/ui/mobile/sign_in_mobile/widgets/registration_stepper.dart';
 import 'package:diplom/ui/web/home_admin_panel/home_admin_panel.dart';
 import 'package:diplom/ui/web/not_authorized/not_authorized.dart';
-import 'package:diplom/utils/translations.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,10 +17,17 @@ import '../../../data/data_provider/firebase_data_provider/firebase_data_provide
 import '../../mobile/sign_in_mobile/auth_screen.dart';
 import '../../web/sign_in_web/sign_in_web.dart';
 
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({required this.platform, super.key});
 
   final UserPlatform platform;
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  bool _isMobileRegistrationStepperCompleted = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,31 +47,27 @@ class AuthGate extends StatelessWidget {
                 ),
               );
             }
-
-            if (state is LoginSuccess && !_isAllowed(state)) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.t.error.platformRoleError),
-                  backgroundColor: redColor,
-                ),
-              );
-              context.read<CubitAuth>().logout();
-            }
           },
           builder: (context, state) {
             if (state is LoginSuccess) {
-              if (platform == UserPlatform.mobile) {
+              if (widget.platform == UserPlatform.mobile) {
                 return state.users.isWorker
                     ? BlocProvider(
-                  create: (_) => HomeCubit(
-                    HomeRepository(
-                      provider: FirebaseDataProvider()
+                      create:
+                          (_) => HomeCubit(
+                            HomeRepository(provider: FirebaseDataProvider()),
+                          ),
+                      child: MainScreen(),
                     )
-                  ),
-                    child: MainScreen())
-                    : NotAuthorizedMobile();
+                    : NotAuthorizedMobile(
+                      onBack: () => context.read<CubitAuth>().logout(),
+                    );
               } else {
-                return state.users.isAdmin ? AdminPanel() : NotAuthorized();
+                return state.users.isAdmin
+                    ? AdminPanel()
+                    : NotAuthorized(
+                      onBack: () => context.read<CubitAuth>().logout(),
+                    );
               }
             }
 
@@ -72,20 +75,20 @@ class AuthGate extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-            return platform == UserPlatform.mobile
-                ? SignInMobile()
+            return widget.platform == UserPlatform.mobile
+                ? _isMobileRegistrationStepperCompleted
+                    ? SignInMobile()
+                    : RegistrationStepper(
+                      onComplete: () {
+                        setState(
+                          () => _isMobileRegistrationStepperCompleted = true,
+                        );
+                      },
+                    )
                 : SignInWeb();
           },
         ),
       ),
     );
-  }
-
-  bool _isAllowed(LoginSuccess state) {
-    if (platform == UserPlatform.mobile) {
-      return state.users.isWorker;
-    }
-
-    return state.users.isAdmin;
   }
 }

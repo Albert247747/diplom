@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:diplom/domain/models/event/event_model.dart';
 import 'package:diplom/domain/models/user/user_models.dart';
+import 'package:diplom/domain/models/worker/worker_model.dart';
 import 'package:diplom/utils/translations.g.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -40,8 +41,67 @@ class FirebaseDataProvider {
     return await _getUserFromFirestore(uid);
   }
 
+  Stream<UserModels> watchCurrentUser() {
+    final user = _auth.currentUser;
+    if (user == null) {
+      return Stream.error(Exception('Пользователь не авторизован'));
+    }
+
+    return _firestore.collection('Users').doc(user.uid).snapshots().map((doc) {
+      final data = doc.data();
+
+      if (!doc.exists || data == null) {
+        throw Exception('USER_NOT_IN_DB');
+      }
+
+      return UserModels.fromJson(doc.id, data);
+    });
+  }
+
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  Stream<List<WorkerModel>> watchWorkers() {
+    return _firestore
+        .collection('Users')
+        .where('role', whereIn: const ['worker', 'bartender', 'waiter', 'cook'])
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs.map(WorkerModel.fromFirestore).toList()
+                ..sort((a, b) => a.fullName.compareTo(b.fullName)),
+        );
+  }
+
+  Future<void> deleteWorker(String uid) async {
+    final userRef = _firestore.collection('Users').doc(uid);
+    final eventsSnapshot =
+        await _firestore
+            .collection('events')
+            .where('assignedWorkerIds', arrayContains: uid)
+            .get();
+    final batch = _firestore.batch();
+
+    batch.delete(userRef);
+
+    for (final eventDoc in eventsSnapshot.docs) {
+      final data = eventDoc.data();
+      final assignedWorkers =
+          (data['assignedWorkers'] as List?)
+              ?.whereType<Map>()
+              .map((item) => Map<String, dynamic>.from(item))
+              .where((worker) => worker['uid']?.toString() != uid)
+              .toList() ??
+          <Map<String, dynamic>>[];
+
+      batch.update(eventDoc.reference, {
+        'assignedWorkerIds': FieldValue.arrayRemove([uid]),
+        'assignedWorkers': assignedWorkers,
+      });
+    }
+
+    await batch.commit();
   }
 
   Stream<List<EventModel>> watchEvents() {
@@ -69,6 +129,17 @@ class FirebaseDataProvider {
           (events) => events.where((event) => event.role == role).toList(),
         );
       },
+    );
+  }
+
+  Stream<List<EventModel>> watchBookedEvents() {
+    final user = _auth.currentUser;
+    if (user == null) {
+      return Stream.error(Exception('Пользователь не авторизован'));
+    }
+
+    return watchEvents().map(
+      (events) => events.where((event) => event.isBookedBy(user.uid)).toList(),
     );
   }
 

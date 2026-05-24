@@ -25,13 +25,15 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> pages = [
     const HomePage(),
-    const Center(child: Text('Избранное')),
-    const Center(child: Text('Сообщения')),
-    const Profile(user: 'Гатиятуллин Альберт Рустемович', post: 'Официант'),
+    const BookedShiftsPage(),
+    const Profile(),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final selectedIndex =
+        currentIndex >= pages.length ? pages.length - 1 : currentIndex;
+
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
 
@@ -51,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
         return Scaffold(
           backgroundColor: mainBackground,
 
-          body: pages[currentIndex],
+          body: pages[selectedIndex],
 
           bottomNavigationBar: Container(
             margin: const EdgeInsets.all(16),
@@ -62,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
 
             child: BottomNavigationBar(
-              currentIndex: currentIndex,
+              currentIndex: selectedIndex,
 
               onTap: (index) {
                 setState(() {
@@ -92,11 +94,6 @@ class _MainScreenState extends State<MainScreen> {
                 ),
 
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.chat_rounded),
-                  label: '',
-                ),
-
-                BottomNavigationBarItem(
                   icon: Icon(Icons.person_rounded),
                   label: '',
                 ),
@@ -114,24 +111,54 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ShiftsPage(
+      title: context.t.mobile.shifts,
+      emptyMessage: 'Пока нет доступных смен',
+      stream: context.read<HomeCubit>().watchWorkerEvents(),
+    );
+  }
+}
+
+class BookedShiftsPage extends StatelessWidget {
+  const BookedShiftsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ShiftsPage(
+      title: 'Мои смены',
+      emptyMessage: 'Вы пока не записались на смены',
+      stream: context.read<HomeCubit>().watchBookedEvents(),
+    );
+  }
+}
+
+class ShiftsPage extends StatelessWidget {
+  const ShiftsPage({
+    required this.title,
+    required this.emptyMessage,
+    required this.stream,
+    super.key,
+  });
+
+  final String title;
+  final String emptyMessage;
+  final Stream<List<EventModel>> stream;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: mainBackground,
-
       appBar: AppBar(
         title: Text(
-          context.t.mobile.shifts,
-
+          title,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
-
         backgroundColor: mainBackground,
       ),
-
       body: Padding(
         padding: const EdgeInsets.only(right: 20, left: 20),
-
         child: StreamBuilder<List<EventModel>>(
-          stream: context.read<HomeCubit>().watchWorkerEvents(),
+          stream: stream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -144,7 +171,7 @@ class HomePage extends StatelessWidget {
             final events = snapshot.data ?? const <EventModel>[];
 
             if (events.isEmpty) {
-              return const Center(child: Text('Пока нет доступных смен'));
+              return Center(child: Text(emptyMessage));
             }
 
             return ListView.separated(

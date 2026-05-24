@@ -3,7 +3,9 @@ import 'package:diplom/utils/translations.g.dart';
 import 'package:flutter/material.dart';
 
 class NotAuthorized extends StatelessWidget {
-  const NotAuthorized({super.key});
+  const NotAuthorized({required this.onBack, super.key});
+
+  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,7 @@ class NotAuthorized extends StatelessWidget {
                   ),
                   SizedBox(height: 62),
                   Text(
-                    context.t.web.notAuthorizedMessage,
+                    context.t.error.workerInWebError,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: blackColor, fontSize: 20),
                   ),
@@ -57,7 +59,7 @@ class NotAuthorized extends StatelessWidget {
                         minWidth: size.width < 400 ? size.width * 0.6 : 400,
                       ),
                       child: ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: onBack,
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),

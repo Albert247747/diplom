@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:diplom/domain/models/event/event_model.dart';
+import 'package:diplom/domain/models/user/user_models.dart';
 import 'package:diplom/ui/mobile/main_screen/bloc/home_state.dart';
 
 import '../../../../data/repositories/home_repository/home_repository.dart';
@@ -27,6 +28,14 @@ class HomeCubit extends Cubit<HomeState> {
 
   Stream<List<EventModel>> watchWorkerEvents() {
     return _repository.watchWorkerEvents();
+  }
+
+  Stream<List<EventModel>> watchBookedEvents() {
+    return _repository.watchBookedEvents();
+  }
+
+  Stream<UserModels> watchCurrentUser() {
+    return _repository.watchCurrentUser();
   }
 
   Stream<EventModel?> watchEvent(String eventId) {

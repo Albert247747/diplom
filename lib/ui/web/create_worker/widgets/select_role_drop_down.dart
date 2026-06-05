@@ -24,7 +24,7 @@ class _SelectRoleDropDownState extends State<SelectRoleDropDown> {
     children: [
       Text(
         context.t.web.createWorker.role,
-        style: TextStyle(color: greenText, fontWeight: FontWeight.bold),
+        style: TextStyle(color: greenColor, fontWeight: FontWeight.bold),
       ),
       DropdownButtonFormField<String>(
         isDense: true,

@@ -38,6 +38,7 @@ class _MainScreenState extends State<MainScreen> {
       stream: FirebaseAuth.instance.authStateChanges(),
 
       builder: (context, snapshot) {
+        final colorScheme = Theme.of(context).colorScheme;
         // loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -51,15 +52,13 @@ class _MainScreenState extends State<MainScreen> {
 
         // если пользователь авторизован
         return Scaffold(
-          backgroundColor: mainBackground,
-
           body: pages[selectedIndex],
 
           bottomNavigationBar: Container(
             margin: const EdgeInsets.all(16),
 
             decoration: BoxDecoration(
-              color: whiteColor,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(25),
             ),
 
@@ -79,23 +78,23 @@ class _MainScreenState extends State<MainScreen> {
               showSelectedLabels: false,
               showUnselectedLabels: false,
 
-              selectedItemColor: mainGreen,
-              unselectedItemColor: Colors.grey,
+              selectedItemColor: colorScheme.primary,
+              unselectedItemColor: greyColor,
 
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_rounded),
-                  label: '',
+                  label: 'Главная',
                 ),
 
                 BottomNavigationBarItem(
                   icon: Icon(Icons.favorite_rounded),
-                  label: '',
+                  label: 'Ваши смены',
                 ),
 
                 BottomNavigationBarItem(
                   icon: Icon(Icons.person_rounded),
-                  label: '',
+                  label: 'Профиль',
                 ),
               ],
             ),
@@ -147,13 +146,11 @@ class ShiftsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainBackground,
       appBar: AppBar(
         title: Text(
           title,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
-        backgroundColor: mainBackground,
       ),
       body: Padding(
         padding: const EdgeInsets.only(right: 20, left: 20),

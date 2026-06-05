@@ -19,14 +19,13 @@ class DetailVacancy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeCubit = context.read<HomeCubit>();
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t.mobile.vacancy.booking),
         centerTitle: true,
-        backgroundColor: mainBackground,
       ),
-      backgroundColor: mainBackground,
       body: StreamBuilder<EventModel?>(
         stream: homeCubit.watchEvent(event.id),
         initialData: event,
@@ -49,7 +48,7 @@ class DetailVacancy extends StatelessWidget {
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
-                      color: whiteColor,
+                      color: colorScheme.surface,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
@@ -70,7 +69,9 @@ class DetailVacancy extends StatelessWidget {
                           ),
                           Text(
                             currentEvent.location,
-                            style: context.titleSmall.copyWith(color: greyText),
+                            style: context.titleSmall.copyWith(
+                              color: greyColor,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           CustomLabelWidget(

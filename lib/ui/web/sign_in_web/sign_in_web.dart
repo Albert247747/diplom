@@ -50,64 +50,70 @@ class _SignInWebViewState extends State<SignInWebView> {
         if (state is LoginLoading) {
           return Center(child: CircularProgressIndicator(color: mainGreen));
         }
-        return Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: 1200,
-              maxHeight: 800,
-              minWidth: 800,
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 100,
-                vertical: 60,
-              ),
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    context.t.signIn.dashboard,
-                    style: TextStyle(
-                      color: blackColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                    ),
+        return SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final isCompact = constraints.maxWidth < 640;
+
+              return Center(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isCompact ? 16 : 32,
+                    vertical: isCompact ? 16 : 32,
                   ),
-                  SizedBox(height: 32),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 400),
-                    child: BaseTextFieldWidget(
-                      hintText: context.t.signIn.emailHint,
-                      controller: _emailController,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 400),
-                    child: BaseTextFieldWidget(
-                      hintText: context.t.signIn.passwordHint,
-                      controller: _passwordController,
-                    ),
-                  ),
-                  SizedBox(height: 46),
-                  SizedBox(
-                    height: 60,
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(minWidth: 400),
-                      child: BaseButton(
-                        backgroundColor: greenButtonMain,
-                        onPressed: _onLoginPressed,
-                        child: Text(context.t.signIn.title),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 720),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isCompact ? 20 : 100,
+                        vertical: isCompact ? 32 : 60,
+                      ),
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(
+                          isCompact ? 18 : 25,
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            context.t.signIn.dashboard,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: blackColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: isCompact ? 24 : 30,
+                            ),
+                          ),
+                          const SizedBox(height: 32),
+                          BaseTextFieldWidget(
+                            hintText: context.t.signIn.emailHint,
+                            controller: _emailController,
+                          ),
+                          const SizedBox(height: 16),
+                          BaseTextFieldWidget(
+                            hintText: context.t.signIn.passwordHint,
+                            controller: _passwordController,
+                          ),
+                          const SizedBox(height: 46),
+                          SizedBox(
+                            height: 60,
+                            child: BaseButton(
+                              width: double.infinity,
+                              backgroundColor: greenButtonMain,
+                              onPressed: _onLoginPressed,
+                              child: Text(context.t.signIn.title),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           ),
         );
       },

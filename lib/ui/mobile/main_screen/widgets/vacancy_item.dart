@@ -31,9 +31,11 @@ class VacancyItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       decoration: BoxDecoration(
-        color: whiteColor,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(25),
       ),
       child: Padding(
@@ -67,14 +69,14 @@ class VacancyItem extends StatelessWidget {
                 dateEvent,
                 style: context.bodyMedium.copyWith(
                   fontWeight: FontWeight.w300,
-                  color: greyText,
+                  color: greyColor,
                 ),
               ),
               rightText: Text(
                 timing,
                 style: context.bodyMedium.copyWith(
                   fontWeight: FontWeight.w300,
-                  color: greyText,
+                  color: greyColor,
                 ),
               ),
             ),
@@ -85,7 +87,7 @@ class VacancyItem extends StatelessWidget {
                   Text(
                     context.t.mobile.vacancy.seats,
                     style: context.bodyMedium.copyWith(
-                      color: greenText,
+                      color: greenColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -95,16 +97,16 @@ class VacancyItem extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: assignedEmployeesCount,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: mainGreen,
+                            color: colorScheme.primary,
                           ),
                         ),
                         TextSpan(
                           text: '/$requiredEmployeesCount',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w300,
-                            color: mainGreen,
+                            color: colorScheme.primary,
                           ),
                         ),
                       ],

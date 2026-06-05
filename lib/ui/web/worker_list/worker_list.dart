@@ -37,22 +37,29 @@ class WorkerList extends StatelessWidget {
             return const Center(child: Text('Сотрудников пока нет'));
           }
 
-          return Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1000),
-              child: ListView.separated(
-                padding: const EdgeInsets.all(24),
-                itemCount: workers.length,
-                separatorBuilder:
-                    (context, index) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  return _WorkerCard(
-                    worker: workers[index],
-                    onDelete: () => _deleteWorker(context, workers[index]),
-                  );
-                },
-              ),
-            ),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isCompact = constraints.maxWidth < 640;
+
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: ListView.separated(
+                    padding: EdgeInsets.all(isCompact ? 16 : 24),
+                    itemCount: workers.length,
+                    separatorBuilder:
+                        (context, index) =>
+                            SizedBox(height: isCompact ? 10 : 12),
+                    itemBuilder: (context, index) {
+                      return _WorkerCard(
+                        worker: workers[index],
+                        onDelete: () => _deleteWorker(context, workers[index]),
+                      );
+                    },
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
@@ -116,42 +123,50 @@ class _WorkerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  worker.fullName,
-                  style: context.titleMedium.copyWith(fontSize: 22),
-                ),
-                const SizedBox(height: 12),
-                _InfoRow(title: 'Фамилия', value: worker.lastName),
-                _InfoRow(title: 'Имя', value: worker.name),
-                _InfoRow(title: 'Отчество', value: worker.surname),
-                _InfoRow(title: 'Должность', value: worker.roleTitle),
-                _InfoRow(title: 'Email', value: worker.email),
-                SelectionArea(child: _InfoRow(title: 'UID', value: worker.uid)),
-              ],
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < 520;
+
+        return Container(
+          padding: EdgeInsets.all(isCompact ? 18 : 24),
+          decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(isCompact ? 18 : 25),
           ),
-          const SizedBox(width: 16),
-          IconButton(
-            onPressed: onDelete,
-            color: redColor,
-            tooltip: context.t.web.createWorker.delete,
-            icon: const Icon(Icons.delete_outline),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      worker.fullName,
+                      style: context.titleMedium.copyWith(
+                        fontSize: isCompact ? 19 : 22,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  IconButton(
+                    onPressed: onDelete,
+                    color: redColor,
+                    tooltip: context.t.web.createWorker.delete,
+                    icon: const Icon(Icons.delete_outline),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              _InfoRow(title: 'Фамилия', value: worker.lastName),
+              _InfoRow(title: 'Имя', value: worker.name),
+              _InfoRow(title: 'Отчество', value: worker.surname),
+              _InfoRow(title: 'Должность', value: worker.roleTitle),
+              _InfoRow(title: 'Email', value: worker.email),
+              SelectionArea(child: _InfoRow(title: 'UID', value: worker.uid)),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -166,9 +181,17 @@ class _InfoRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
-      child: Text(
-        '$title: ${value.isEmpty ? '-' : value}',
-        style: context.bodyMedium,
+      child: RichText(
+        text: TextSpan(
+          style: context.bodyMedium,
+          children: [
+            TextSpan(
+              text: '$title: ',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            TextSpan(text: value.isEmpty ? '-' : value),
+          ],
+        ),
       ),
     );
   }

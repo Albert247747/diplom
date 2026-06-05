@@ -3,29 +3,27 @@ import 'package:diplom/ui/common/widgets/button/button.dart';
 import 'package:flutter/material.dart';
 
 void baseBottomSheet(
-    BuildContext context,
-    String descriptionText,
-    VoidCallback onPressed,
-    String textButton,
-    ) {
+  BuildContext context,
+  String descriptionText,
+  VoidCallback onPressed,
+  String textButton,
+) {
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
     barrierColor: mainGreen.withValues(alpha: 0.5),
-    isScrollControlled: true, // Позволяет модалке быть выше клавиатуры
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(25),
-      ),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
     ),
-    builder: (context) => SupportBottomSheet(
-      textButton: textButton,
-      onPressed: () {
-        Navigator.pop(context); // Закрываем модалку
-        onPressed(); // Вызываем переданную функцию
-      },
-      descriptionText: descriptionText,
-    ),
+    builder:
+        (context) => SupportBottomSheet(
+          textButton: textButton,
+          onPressed: () {
+            Navigator.pop(context);
+            onPressed();
+          },
+          descriptionText: descriptionText,
+        ),
   );
 }
 
@@ -43,13 +41,14 @@ class SupportBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25),
-        ),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -66,10 +65,9 @@ class SupportBottomSheet extends StatelessWidget {
 
           Text(
             descriptionText,
-            style: const TextStyle(
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
             ),
             textAlign: TextAlign.center,
           ),

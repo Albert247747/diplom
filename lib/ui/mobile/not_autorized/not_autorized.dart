@@ -9,8 +9,9 @@ class NotAuthorizedMobile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: mainBackground,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -20,8 +21,7 @@ class NotAuthorizedMobile extends StatelessWidget {
               Text(
                 context.t.error.adminInWebError,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: blackColor,
+                style: theme.textTheme.bodyMedium?.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),
@@ -30,7 +30,7 @@ class NotAuthorizedMobile extends StatelessWidget {
               Text(
                 context.t.web.openWebSiteMessage,
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: blackColor, fontSize: 16),
+                style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 32),
               SizedBox(

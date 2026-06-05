@@ -57,11 +57,9 @@ class _SignInMobileViewState extends State<SignInMobileView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: mainBackground,
         centerTitle: true,
         title: Text(context.t.signIn.title, style: context.titleMedium),
       ),
-      backgroundColor: mainBackground,
 
       /// не забыть добавить отступ под челку
       body: BlocConsumer<CubitAuth, AuthState>(

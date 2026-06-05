@@ -98,59 +98,55 @@ class _CreateEventViewState extends State<CreateEventView> {
           );
         }
 
-        return Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 40),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 920),
-              child: Container(
-                padding: const EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: whiteColor,
-                  borderRadius: BorderRadius.circular(25),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isCompact = constraints.maxWidth < 760;
+
+            return Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isCompact ? 16 : 32,
+                  vertical: isCompact ? 16 : 40,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      context.t.web.createEvent.formTitle,
-                      style: const TextStyle(
-                        color: blackColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 920),
+                  child: Container(
+                    padding: EdgeInsets.all(isCompact ? 20 : 32),
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(isCompact ? 18 : 25),
                     ),
-                    const SizedBox(height: 24),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Expanded(
-                          child: _textFieldBlock(
+                        Text(
+                          context.t.web.createEvent.formTitle,
+                          style: TextStyle(
+                            color: blackColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: isCompact ? 22 : 24,
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        _fieldRow(isCompact, [
+                          _textFieldBlock(
                             title: context.t.web.createEvent.name,
                             controller: _titleController,
                           ),
-                        ),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: _textFieldBlock(
+                          _textFieldBlock(
                             title: context.t.web.createEvent.location,
                             controller: _locationController,
                           ),
+                        ]),
+                        const SizedBox(height: 24),
+                        _textFieldBlock(
+                          title: context.t.web.createEvent.description,
+                          controller: _descriptionController,
+                          maxLines: 4,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    _textFieldBlock(
-                      title: context.t.web.createEvent.description,
-                      controller: _descriptionController,
-                      maxLines: 4,
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: _pickerBlock(
+                        const SizedBox(height: 24),
+                        _fieldRow(isCompact, [
+                          _pickerBlock(
                             title: context.t.web.createEvent.date,
                             value:
                                 _selectedDate == null
@@ -158,10 +154,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                                     : _formatDate(_selectedDate!),
                             onPressed: _pickDate,
                           ),
-                        ),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: _pickerBlock(
+                          _pickerBlock(
                             title: context.t.web.createEvent.startTime,
                             value:
                                 _startTime == null
@@ -169,10 +162,7 @@ class _CreateEventViewState extends State<CreateEventView> {
                                     : _formatTime(_startTime!),
                             onPressed: () => _pickTime(isStart: true),
                           ),
-                        ),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: _pickerBlock(
+                          _pickerBlock(
                             title: context.t.web.createEvent.endTime,
                             value:
                                 _endTime == null
@@ -180,15 +170,10 @@ class _CreateEventViewState extends State<CreateEventView> {
                                     : _formatTime(_endTime!),
                             onPressed: () => _pickTime(isStart: false),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: SelectRoleDropDown(
+                        ]),
+                        const SizedBox(height: 24),
+                        _fieldRow(isCompact, [
+                          SelectRoleDropDown(
                             selectedRole: _selectedRole,
                             onRoleChanged: (value) {
                               setState(() {
@@ -196,42 +181,73 @@ class _CreateEventViewState extends State<CreateEventView> {
                               });
                             },
                           ),
-                        ),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: _textFieldBlock(
+                          _textFieldBlock(
                             title: context.t.web.createEvent.workerCount,
                             controller: _workerCountController,
                             keyboardType: TextInputType.number,
                           ),
-                        ),
-                        const SizedBox(width: 24),
-                        Expanded(
-                          child: _textFieldBlock(
+                          _textFieldBlock(
                             title: context.t.web.createEvent.salary,
                             controller: _salaryController,
                             keyboardType: TextInputType.number,
                           ),
+                        ]),
+                        const SizedBox(height: 36),
+                        Align(
+                          alignment:
+                              isCompact
+                                  ? Alignment.center
+                                  : Alignment.centerRight,
+                          child: SizedBox(
+                            width: isCompact ? double.infinity : null,
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: _submit,
+                              child: Text(context.t.web.createEvent.submit),
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 36),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        onPressed: _submit,
-                        child: Text(context.t.web.createEvent.submit),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     ),
   );
+
+  Widget _fieldRow(bool isCompact, List<Widget> children) {
+    if (isCompact) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: _withSpacing(children, vertical: true),
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _withSpacing(
+        children.map((child) => Expanded(child: child)).toList(),
+        vertical: false,
+      ),
+    );
+  }
+
+  List<Widget> _withSpacing(List<Widget> children, {required bool vertical}) {
+    final result = <Widget>[];
+    for (var i = 0; i < children.length; i++) {
+      if (i > 0) {
+        result.add(
+          SizedBox(width: vertical ? 0 : 24, height: vertical ? 24 : 0),
+        );
+      }
+      result.add(children[i]);
+    }
+    return result;
+  }
 
   Widget _textFieldBlock({
     required String title,
@@ -244,7 +260,7 @@ class _CreateEventViewState extends State<CreateEventView> {
       children: [
         Text(
           title,
-          style: const TextStyle(color: greenText, fontWeight: FontWeight.bold),
+          style: const TextStyle(color: greenColor, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         TextField(
@@ -253,7 +269,7 @@ class _CreateEventViewState extends State<CreateEventView> {
           keyboardType: keyboardType,
           decoration: const InputDecoration(
             filled: true,
-            fillColor: backgroundTextField,
+            fillColor: backgroundTextFieldColor,
             border: OutlineInputBorder(borderSide: BorderSide.none),
           ),
         ),
@@ -271,7 +287,7 @@ class _CreateEventViewState extends State<CreateEventView> {
       children: [
         Text(
           title,
-          style: const TextStyle(color: greenText, fontWeight: FontWeight.bold),
+          style: const TextStyle(color: greenColor, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         SizedBox(

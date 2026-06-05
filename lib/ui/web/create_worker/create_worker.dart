@@ -91,162 +91,168 @@ class _CreateWorkerViewState extends State<CreateWorkerView> {
           );
         }
 
-        return Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 266,
-                vertical: 92,
-              ),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 400,
-                  minHeight: 600,
-                  maxWidth: 900,
-                  maxHeight: 700,
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final isCompact = constraints.maxWidth < 720;
+
+            return Center(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isCompact ? 16 : 32,
+                  vertical: isCompact ? 16 : 40,
                 ),
-                child: Container(
-                  padding: const EdgeInsets.all(32),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _textFieldBlock(
-                              title: context.t.web.createWorker.email,
-                              controller: _emailController,
-                            ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 900),
+                  child: Container(
+                    padding: EdgeInsets.all(isCompact ? 20 : 32),
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(isCompact ? 18 : 25),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _fieldRow(isCompact, [
+                          _textFieldBlock(
+                            title: context.t.web.createWorker.email,
+                            controller: _emailController,
                           ),
-                          const SizedBox(width: 32),
-                          Expanded(
-                            child: _textFieldBlock(
-                              title: context.t.web.createWorker.password,
-                              controller: _passwordController,
-                            ),
+                          _textFieldBlock(
+                            title: context.t.web.createWorker.password,
+                            controller: _passwordController,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: _textFieldBlock(
-                              title: context.t.web.createWorker.name,
-                              controller: _nameController,
-                            ),
+                        ]),
+                        const SizedBox(height: 24),
+                        _fieldRow(isCompact, [
+                          _textFieldBlock(
+                            title: context.t.web.createWorker.name,
+                            controller: _nameController,
                           ),
-                          const SizedBox(width: 32),
-                          Expanded(
-                            child: _textFieldBlock(
-                              title: context.t.web.createWorker.lastName,
-                              controller: _lastNameController,
-                            ),
+                          _textFieldBlock(
+                            title: context.t.web.createWorker.lastName,
+                            controller: _lastNameController,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _textFieldBlock(
-                              title: context.t.web.createWorker.surname,
-                              controller: _surNameController,
-                            ),
+                        ]),
+                        const SizedBox(height: 24),
+                        _fieldRow(isCompact, [
+                          _textFieldBlock(
+                            title: context.t.web.createWorker.surname,
+                            controller: _surNameController,
                           ),
-                          const SizedBox(width: 32),
-                          Expanded(
-                            child: SelectRoleDropDown(
-                              selectedRole: _selectedRole,
-                              onRoleChanged: (newRole) {
-                                setState(() {
-                                  _selectedRole = newRole;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 40),
-                      Row(
-                        children: [
-                          BaseButton(
-                            backgroundColor: greenButtonMain,
-                            onPressed: () => Navigator.pop(context),
-                            borderRadius: BorderRadius.circular(100),
-                            child: Icon(Icons.exit_to_app, color: whiteColor),
-                          ),
-                          Spacer(),
-                          BaseButton(
-                            backgroundColor: greenButtonMain,
-                            borderRadius: BorderRadius.circular(100),
-                            onPressed: () {
-                              final email = _emailController.text.trim();
-                              final password = _passwordController.text.trim();
-                              final name = _nameController.text.trim();
-                              final lastName = _lastNameController.text.trim();
-                              final surname = _surNameController.text.trim();
-
-                              if (_selectedRole != null) {
-                                if (email.isEmpty ||
-                                    password.isEmpty ||
-                                    name.isEmpty ||
-                                    lastName.isEmpty ||
-                                    surname.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        context
-                                            .t
-                                            .web
-                                            .createWorker
-                                            .fillAllFields,
-                                      ),
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                context.read<CreateWorkerCubit>().createWorker(
-                                  email,
-                                  password,
-                                  _selectedRole!,
-                                  name,
-                                  lastName,
-                                  surname,
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      context.t.web.createWorker.selectRole,
-                                    ),
-                                  ),
-                                );
-                              }
+                          SelectRoleDropDown(
+                            selectedRole: _selectedRole,
+                            onRoleChanged: (newRole) {
+                              setState(() {
+                                _selectedRole = newRole;
+                              });
                             },
-                            child: Text(
-                              context.t.web.createWorker.submit,
-                              style: TextStyle(color: whiteColor),
-                            ),
                           ),
-                        ],
-                      ),
-                    ],
+                        ]),
+                        const SizedBox(height: 40),
+                        _actionsRow(context, isCompact),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     ),
   );
+
+  Widget _fieldRow(bool isCompact, List<Widget> children) {
+    if (isCompact) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: _withSpacing(children, vertical: true),
+      );
+    }
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: _withSpacing(
+        children.map((child) => Expanded(child: child)).toList(),
+        vertical: false,
+      ),
+    );
+  }
+
+  Widget _actionsRow(BuildContext context, bool isCompact) {
+    final backButton = BaseButton(
+      width: isCompact ? double.infinity : null,
+      backgroundColor: greenButtonMain,
+      onPressed: () => Navigator.pop(context),
+      borderRadius: BorderRadius.circular(100),
+      child: Icon(Icons.exit_to_app, color: whiteColor),
+    );
+
+    final submitButton = BaseButton(
+      width: isCompact ? double.infinity : null,
+      backgroundColor: greenButtonMain,
+      borderRadius: BorderRadius.circular(100),
+      onPressed: () {
+        final email = _emailController.text.trim();
+        final password = _passwordController.text.trim();
+        final name = _nameController.text.trim();
+        final lastName = _lastNameController.text.trim();
+        final surname = _surNameController.text.trim();
+
+        if (_selectedRole != null) {
+          if (email.isEmpty ||
+              password.isEmpty ||
+              name.isEmpty ||
+              lastName.isEmpty ||
+              surname.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.t.web.createWorker.fillAllFields)),
+            );
+            return;
+          }
+
+          context.read<CreateWorkerCubit>().createWorker(
+            email,
+            password,
+            _selectedRole!,
+            name,
+            lastName,
+            surname,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.t.web.createWorker.selectRole)),
+          );
+        }
+      },
+      child: Text(
+        context.t.web.createWorker.submit,
+        style: TextStyle(color: whiteColor),
+      ),
+    );
+
+    if (isCompact) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [submitButton, const SizedBox(height: 12), backButton],
+      );
+    }
+
+    return Row(children: [backButton, const Spacer(), submitButton]);
+  }
+
+  List<Widget> _withSpacing(List<Widget> children, {required bool vertical}) {
+    final result = <Widget>[];
+    for (var i = 0; i < children.length; i++) {
+      if (i > 0) {
+        result.add(
+          SizedBox(width: vertical ? 0 : 32, height: vertical ? 24 : 0),
+        );
+      }
+      result.add(children[i]);
+    }
+    return result;
+  }
 
   Widget _textFieldBlock({
     required String title,
@@ -257,7 +263,7 @@ class _CreateWorkerViewState extends State<CreateWorkerView> {
       children: [
         Text(
           title,
-          style: TextStyle(color: greenText, fontWeight: FontWeight.bold),
+          style: TextStyle(color: greenColor, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         OutlinedTextField(controller: controller),

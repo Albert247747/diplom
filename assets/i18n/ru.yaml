@@ -107,6 +107,7 @@ mobile:
     ok: "Ок"
     profile: "Профиль"
     post: "Должность:"
+    settings: "Настройки"
 
 validation:
   enterEmail: "Введите email"

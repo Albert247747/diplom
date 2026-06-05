@@ -58,9 +58,7 @@ class _RegistrationStepperState extends State<RegistrationStepper> {
     ];
 
     return Scaffold(
-      backgroundColor: mainBackground,
       appBar: AppBar(
-        backgroundColor: mainBackground,
         centerTitle: true,
         title: Text(
           context.t.mobile.registrationStepper.title,
@@ -132,6 +130,10 @@ class _StepProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final inactiveColor =
+        Theme.of(context).inputDecorationTheme.fillColor ?? colorScheme.surface;
+
     return Row(
       children: List.generate(stepsCount, (index) {
         final isActive = index <= currentStep;
@@ -145,15 +147,17 @@ class _StepProgressIndicator extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: isActive ? mainGreen : backgroundTextField,
+                  color: isActive ? colorScheme.primary : inactiveColor,
                   shape: BoxShape.circle,
-                  border: Border.all(color: isActive ? mainGreen : greyText),
+                  border: Border.all(
+                    color: isActive ? colorScheme.primary : greyColor,
+                  ),
                 ),
                 alignment: Alignment.center,
                 child: Text(
                   '${index + 1}',
                   style: context.titleSmall.copyWith(
-                    color: isActive ? whiteColor : blackColor,
+                    color: isActive ? whiteColor : colorScheme.onSurface,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -163,7 +167,8 @@ class _StepProgressIndicator extends StatelessWidget {
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     height: 2,
-                    color: index < currentStep ? mainGreen : greyText,
+                    color:
+                        index < currentStep ? colorScheme.primary : greyColor,
                   ),
                 ),
             ],
@@ -206,7 +211,7 @@ class _RegistrationStep extends StatelessWidget {
         Text(
           step.description,
           textAlign: TextAlign.center,
-          style: context.bodyMedium.copyWith(color: greenText, height: 1.4),
+          style: context.bodyMedium.copyWith(color: greenColor, height: 1.4),
         ),
       ],
     );

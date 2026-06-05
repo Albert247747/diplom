@@ -69,7 +69,7 @@ class _BaseTextFieldWidgetState extends State<BaseTextFieldWidget> {
                     _obscureText
                         ? (widget.showPasswordIcon ?? Icons.visibility_off)
                         : (widget.showPasswordIcon ?? Icons.visibility),
-                    color: greenText,
+                    color: greenColor,
                   ),
                   onPressed: () {
                     setState(() {

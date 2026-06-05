@@ -1,5 +1,6 @@
 import 'package:diplom/ui/common/theme/colors.dart';
 import 'package:diplom/ui/mobile/main_screen/bloc/home_cubit.dart';
+import 'package:diplom/ui/mobile/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,13 +11,14 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           context.t.mobile.vacancy.profile,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
-        backgroundColor: mainBackground,
         actions: [
           IconButton(
             onPressed: () async {
@@ -26,20 +28,16 @@ class Profile extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: const Color(0xFFF2F2F2),
       body: StreamBuilder(
         stream: context.read<HomeCubit>().watchCurrentUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           }
-
           final user = snapshot.data;
-
           if (user == null) {
             return const Center(child: Text('Пользователь не найден'));
           }
@@ -55,14 +53,14 @@ class Profile extends StatelessWidget {
                     child: Container(
                       width: 90,
                       height: 90,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: mainBackground,
+                        color: colorScheme.surface,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.person,
                         size: 50,
-                        color: mainGreen,
+                        color: colorScheme.primary,
                       ),
                     ),
                   ),
@@ -82,7 +80,7 @@ class Profile extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -97,6 +95,30 @@ class Profile extends StatelessWidget {
                           ],
                         ),
                       ],
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  GestureDetector(
+                    onTap:
+                        () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => Settings()),
+                        ),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Icons.settings),
+                          SizedBox(width: 10),
+                          Text(context.t.mobile.vacancy.settings),
+                        ],
+                      ),
                     ),
                   ),
                 ],

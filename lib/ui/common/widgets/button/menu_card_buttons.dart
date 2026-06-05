@@ -7,12 +7,14 @@ class CardButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
   final String iconPath;
+  final double width;
 
   const CardButton({
     super.key,
     required this.text,
     required this.onTap,
     required this.iconPath,
+    this.width = 180,
   });
 
   @override
@@ -24,7 +26,7 @@ class CardButton extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.only(top: 24),
-            width: 180,
+            width: width,
             height: 112,
             padding: const EdgeInsets.fromLTRB(18, 34, 18, 18),
             decoration: BoxDecoration(

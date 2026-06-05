@@ -36,11 +36,25 @@ class ShiftsList extends StatelessWidget {
             return const Center(child: Text('Пока нет мероприятий'));
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(24),
-            itemCount: events.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
-            itemBuilder: (context, index) => _EventCard(event: events[index]),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isCompact = constraints.maxWidth < 640;
+
+              return Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1000),
+                  child: ListView.separated(
+                    padding: EdgeInsets.all(isCompact ? 16 : 24),
+                    itemCount: events.length,
+                    separatorBuilder:
+                        (context, index) =>
+                            SizedBox(height: isCompact ? 12 : 16),
+                    itemBuilder:
+                        (context, index) => _EventCard(event: events[index]),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
@@ -55,63 +69,71 @@ class _EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isCompact = constraints.maxWidth < 520;
+
+        return Container(
+          padding: EdgeInsets.all(isCompact ? 18 : 24),
+          decoration: BoxDecoration(
+            color: whiteColor,
+            borderRadius: BorderRadius.circular(isCompact ? 18 : 25),
+          ),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Text(
-                  event.title,
-                  style: context.titleMedium.copyWith(fontSize: 24),
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      event.title,
+                      style: context.titleMedium.copyWith(
+                        fontSize: isCompact ? 20 : 24,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Text(
+                    '${event.assignedCount}/${event.workerCount}',
+                    style: context.bodyMedium.copyWith(
+                      color: mainGreen,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
+              const SizedBox(height: 12),
+              Text('${event.formattedDate}  ${event.formattedTime}'),
+              const SizedBox(height: 8),
+              Text('Место: ${event.location}'),
+              const SizedBox(height: 8),
+              Text('Должность: ${event.roleTitle}'),
+              const SizedBox(height: 8),
+              Text('Оплата: ${event.salary} руб/час'),
+              const SizedBox(height: 12),
+              Text(event.description),
+              const SizedBox(height: 20),
               Text(
-                '${event.assignedCount}/${event.workerCount}',
-                style: context.bodyMedium.copyWith(
-                  color: mainGreen,
-                  fontWeight: FontWeight.bold,
-                ),
+                'Записались',
+                style: context.bodyMedium.copyWith(fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 8),
+              if (event.assignedWorkers.isEmpty)
+                const Text('Пока никто не записался')
+              else
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children:
+                      event.assignedWorkers
+                          .map((worker) => _WorkerChip(worker: worker))
+                          .toList(),
+                ),
             ],
           ),
-          const SizedBox(height: 12),
-          Text('${event.formattedDate}  ${event.formattedTime}'),
-          const SizedBox(height: 8),
-          Text('Место: ${event.location}'),
-          const SizedBox(height: 8),
-          Text('Должность: ${event.roleTitle}'),
-          const SizedBox(height: 8),
-          Text('Оплата: ${event.salary} руб/час'),
-          const SizedBox(height: 12),
-          Text(event.description),
-          const SizedBox(height: 20),
-          Text(
-            'Записались',
-            style: context.bodyMedium.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          if (event.assignedWorkers.isEmpty)
-            const Text('Пока никто не записался')
-          else
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children:
-                  event.assignedWorkers
-                      .map((worker) => _WorkerChip(worker: worker))
-                      .toList(),
-            ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -128,11 +150,12 @@ class _WorkerChip extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      constraints: const BoxConstraints(maxWidth: 280),
       decoration: BoxDecoration(
-        color: backgroundTextField,
+        color: backgroundTextFieldColor,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Text('$name, $role'),
+      child: Text('$name, $role', overflow: TextOverflow.ellipsis),
     );
   }
 

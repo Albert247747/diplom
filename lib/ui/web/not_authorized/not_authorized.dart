@@ -1,4 +1,3 @@
-import 'package:diplom/ui/common/theme/colors.dart';
 import 'package:diplom/utils/translations.g.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +9,10 @@ class NotAuthorized extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: mainBackground,
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -25,7 +25,7 @@ class NotAuthorized extends StatelessWidget {
               vertical: size.height < 600 ? 20 : 60,
             ),
             decoration: BoxDecoration(
-              color: whiteColor,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(25),
             ),
             child: SingleChildScrollView(
@@ -35,7 +35,7 @@ class NotAuthorized extends StatelessWidget {
                   Text(
                     context.t.signIn.dashboard,
                     style: TextStyle(
-                      color: blackColor,
+                      color: colorScheme.onSurface,
                       fontWeight: FontWeight.bold,
                       fontSize: 40,
                     ),
@@ -44,12 +44,12 @@ class NotAuthorized extends StatelessWidget {
                   Text(
                     context.t.error.workerInWebError,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: blackColor, fontSize: 20),
+                    style: theme.textTheme.bodyMedium?.copyWith(fontSize: 20),
                   ),
                   Text(
                     context.t.web.openMobileAppMessage,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: blackColor, fontSize: 20),
+                    style: theme.textTheme.bodyMedium?.copyWith(fontSize: 20),
                   ),
                   SizedBox(height: 62),
                   SizedBox(
@@ -64,11 +64,11 @@ class NotAuthorized extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ),
-                          backgroundColor: mainGreen,
+                          backgroundColor: colorScheme.primary,
                         ),
                         child: Text(
                           context.t.web.back,
-                          style: TextStyle(color: whiteColor),
+                          style: TextStyle(color: colorScheme.onPrimary),
                         ),
                       ),
                     ),

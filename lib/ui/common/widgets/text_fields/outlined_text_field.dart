@@ -39,7 +39,8 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = widget.hasError ? redColor : mainGreen;
+    final colorScheme = Theme.of(context).colorScheme;
+    final borderColor = widget.hasError ? redColor : colorScheme.primary;
 
     return TextField(
       controller: widget.controller,
@@ -55,26 +56,30 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
           horizontal: 12,
           vertical: 12,
         ),
-        prefixIcon: widget.prefixIconPath != null
-            ? Padding(
-          padding: const EdgeInsets.all(10),
-          child: Image.asset(
-            widget.prefixIconPath!,
-            width: 20,
-            height: 20,
-          ),
-        )
-            : null,
-        suffixIcon: widget.showPasswordIcon != null
-            ? IconButton(
-          icon: Icon(widget.showPasswordIcon),
-          onPressed: () {
-            setState(() {
-              _obscure = !_obscure;
-            });
-          },
-        )
-            : null,
+        filled: true,
+        fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+        prefixIcon:
+            widget.prefixIconPath != null
+                ? Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Image.asset(
+                    widget.prefixIconPath!,
+                    width: 20,
+                    height: 20,
+                  ),
+                )
+                : null,
+        suffixIcon:
+            widget.showPasswordIcon != null
+                ? IconButton(
+                  icon: Icon(widget.showPasswordIcon),
+                  onPressed: () {
+                    setState(() {
+                      _obscure = !_obscure;
+                    });
+                  },
+                )
+                : null,
 
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

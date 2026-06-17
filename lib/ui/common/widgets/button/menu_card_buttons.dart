@@ -19,6 +19,7 @@ class CardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
       child: Stack(
@@ -30,14 +31,19 @@ class CardButton extends StatelessWidget {
             height: 112,
             padding: const EdgeInsets.fromLTRB(18, 34, 18, 18),
             decoration: BoxDecoration(
-              color: whiteColor,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
                 color: greenButtonMain.withValues(alpha: 0.12),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: blackColor.withValues(alpha: 0.16),
+                  color: blackColor.withValues(
+                    alpha:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? 0.32
+                            : 0.16,
+                  ),
                   blurRadius: 18,
                   offset: const Offset(0, 10),
                 ),
@@ -49,8 +55,8 @@ class CardButton extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: greenButtonMain,
+                style: TextStyle(
+                  color: colorScheme.primary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),

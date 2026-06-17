@@ -1,7 +1,6 @@
 import 'package:diplom/ui/common/theme/style_text.dart';
 import 'package:diplom/utils/translations.g.dart';
 import 'package:flutter/material.dart';
-import '../../../common/theme/colors.dart';
 
 class SelectRoleDropDown extends StatefulWidget {
   const SelectRoleDropDown({
@@ -24,7 +23,10 @@ class _SelectRoleDropDownState extends State<SelectRoleDropDown> {
     children: [
       Text(
         context.t.web.createWorker.role,
-        style: TextStyle(color: greenColor, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       DropdownButtonFormField<String>(
         isDense: true,

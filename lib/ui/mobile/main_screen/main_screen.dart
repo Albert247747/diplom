@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:diplom/data/services/push_notification/push_notification.dart';
 import 'package:diplom/domain/models/event/event_model.dart';
 import 'package:diplom/ui/common/theme/colors.dart';
 import 'package:diplom/ui/mobile/detail_vacancy/detail_vacancy.dart';
@@ -22,12 +25,59 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
+  StreamSubscription<List<EventModel>>? _workerEventsSubscription;
+  final Set<String> _knownWorkerEventIds = <String>{};
+  bool _didReceiveInitialWorkerEvents = false;
 
   final List<Widget> pages = [
     const HomePage(),
     const BookedShiftsPage(),
     const Profile(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _subscribeToWorkerEvents();
+  }
+
+  @override
+  void dispose() {
+    _workerEventsSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _subscribeToWorkerEvents() {
+    final homeCubit = context.read<HomeCubit>();
+
+    _workerEventsSubscription = homeCubit.watchWorkerEvents().listen((events) {
+      final currentEventIds = events.map((event) => event.id).toSet();
+
+      if (!_didReceiveInitialWorkerEvents) {
+        _knownWorkerEventIds
+          ..clear()
+          ..addAll(currentEventIds);
+        _didReceiveInitialWorkerEvents = true;
+        return;
+      }
+
+      final newEvents =
+          events.where((event) => !_knownWorkerEventIds.contains(event.id)).toList();
+
+      for (final event in newEvents) {
+        pushNotification.showShiftRegistrationStarted(
+          eventId: event.id,
+          title: 'Открыта запись на смену',
+          body:
+              '${event.title}, ${event.formattedDate} ${event.formattedTime}',
+        );
+      }
+
+      _knownWorkerEventIds
+        ..clear()
+        ..addAll(currentEventIds);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

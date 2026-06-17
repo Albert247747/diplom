@@ -1,16 +1,35 @@
-# diplom
+Это проект, это дипломный проект. Цель этого приложения, следующая:
+Есть 2 плафтормы и все в одном проекте (папка web и mobile), а именно:
+1) mobile
+2) web
+К проекту подключены:
+firebase_auth
+firebase-hosting (для сайта)
+firebase_firestore (база данных)
 
-A new Flutter project.
 
-## Getting Started
+web 
+Это Админка, доступ только через сайт, и роль (admin)
+Admin через сайт, создает аккаунт для работника (он вписывает его данные и создает пользователя)
+Так же админ, создает меропрития, и вписывает описание, сколько человек нужно, фиксированная ставка
+(за час и пока в рублях) для этого мероприятия, и кто нужен. 
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+mobile
+Сюда есть доступ только для работников (Могут записываться на смены, отменять запись на смену), в mobile можно
+пускать только если платформа mobile и роль одна из работников (Бармен, официант, повар и так далее)
+входит по уже созданным админом аккаунт только через мобильное приложение
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+все что описано выше, это только базовый функционал, как ты видишь, в проекте есть пакет для локализации, 
+но это в будущем.
+
+Правила которые ты должен не нарушать
+1) Не делать коммиты, я их сам буду делать
+2) Верстку сам буду делать, так как у тебя нету макетов. 
+3) Архитектуру не менять, не оставлять большое количество коммтариев.
+4) Не запускать никаких тестов, как минимум потому что их нет, и делать их не нужно. Это диплом
+5) не коммерческий проект, главное что бы все просто работало.
+6) Архитекуру использую чистую.
+
+

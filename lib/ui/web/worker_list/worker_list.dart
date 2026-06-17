@@ -15,11 +15,7 @@ class WorkerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainBackground,
-      appBar: AppBar(
-        backgroundColor: mainBackground,
-        title: Text(context.t.web.listWorker),
-      ),
+      appBar: AppBar(title: Text(context.t.web.listWorker)),
       body: StreamBuilder<List<WorkerModel>>(
         stream: _repository.watchWorkers(),
         builder: (context, snapshot) {
@@ -123,6 +119,8 @@ class _WorkerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.maxWidth < 520;
@@ -130,7 +128,7 @@ class _WorkerCard extends StatelessWidget {
         return Container(
           padding: EdgeInsets.all(isCompact ? 18 : 24),
           decoration: BoxDecoration(
-            color: whiteColor,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(isCompact ? 18 : 25),
           ),
           child: Column(

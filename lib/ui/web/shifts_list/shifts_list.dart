@@ -1,7 +1,6 @@
 import 'package:diplom/data/data_provider/firebase_data_provider/firebase_data_provider.dart';
 import 'package:diplom/data/repositories/home_repository/home_repository.dart';
 import 'package:diplom/domain/models/event/event_model.dart';
-import 'package:diplom/ui/common/theme/colors.dart';
 import 'package:diplom/ui/common/theme/style_text.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +13,7 @@ class ShiftsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: mainBackground,
-      appBar: AppBar(
-        backgroundColor: mainBackground,
-        title: const Text('Список мероприятий'),
-      ),
+      appBar: AppBar(title: const Text('Список мероприятий')),
       body: StreamBuilder<List<EventModel>>(
         stream: _repository.watchEvents(),
         builder: (context, snapshot) {
@@ -69,6 +64,8 @@ class _EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final isCompact = constraints.maxWidth < 520;
@@ -76,7 +73,7 @@ class _EventCard extends StatelessWidget {
         return Container(
           padding: EdgeInsets.all(isCompact ? 18 : 24),
           decoration: BoxDecoration(
-            color: whiteColor,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(isCompact ? 18 : 25),
           ),
           child: Column(
@@ -97,7 +94,7 @@ class _EventCard extends StatelessWidget {
                   Text(
                     '${event.assignedCount}/${event.workerCount}',
                     style: context.bodyMedium.copyWith(
-                      color: mainGreen,
+                      color: colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -145,6 +142,7 @@ class _WorkerChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final name = _workerName(worker);
     final role = EventModel.roleTitleFromRole(worker['role']?.toString() ?? '');
 
@@ -152,7 +150,9 @@ class _WorkerChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       constraints: const BoxConstraints(maxWidth: 280),
       decoration: BoxDecoration(
-        color: backgroundTextFieldColor,
+        color:
+            Theme.of(context).inputDecorationTheme.fillColor ??
+            colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Text('$name, $role', overflow: TextOverflow.ellipsis),

@@ -58,166 +58,169 @@ class _CreateEventViewState extends State<CreateEventView> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: mainBackground,
-    appBar: AppBar(
-      backgroundColor: mainBackground,
-      title: Text(context.t.web.createEvent.title),
-    ),
-    body: BlocConsumer<CreateEventCubit, CreateEventState>(
-      listener: (context, state) {
-        if (state is CreateEventSuccess) {
-          _clearForm();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                context.t.web.createEvent.success,
-                style: TextStyle(color: Colors.white),
-              ),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-        if (state is CreateEventError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.messageError ?? context.t.web.createEvent.genericError,
-                style: TextStyle(color: Colors.white),
-              ),
-              backgroundColor: redColor,
-            ),
-          );
-        }
-      },
-      builder: (context, state) {
-        if (state is CreateEventLoading) {
-          return const Center(
-            child: CircularProgressIndicator(color: Colors.lightGreen),
-          );
-        }
-
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final isCompact = constraints.maxWidth < 760;
-
-            return Center(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: isCompact ? 16 : 32,
-                  vertical: isCompact ? 16 : 40,
+    return Scaffold(
+      appBar: AppBar(title: Text(context.t.web.createEvent.title)),
+      body: BlocConsumer<CreateEventCubit, CreateEventState>(
+        listener: (context, state) {
+          if (state is CreateEventSuccess) {
+            _clearForm();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  context.t.web.createEvent.success,
+                  style: TextStyle(color: Colors.white),
                 ),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 920),
-                  child: Container(
-                    padding: EdgeInsets.all(isCompact ? 20 : 32),
-                    decoration: BoxDecoration(
-                      color: whiteColor,
-                      borderRadius: BorderRadius.circular(isCompact ? 18 : 25),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          context.t.web.createEvent.formTitle,
-                          style: TextStyle(
-                            color: blackColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: isCompact ? 22 : 24,
-                          ),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+
+          if (state is CreateEventError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  state.messageError ?? context.t.web.createEvent.genericError,
+                  style: TextStyle(color: Colors.white),
+                ),
+                backgroundColor: redColor,
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is CreateEventLoading) {
+            return const Center(
+              child: CircularProgressIndicator(color: Colors.lightGreen),
+            );
+          }
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isCompact = constraints.maxWidth < 760;
+
+              return Center(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: isCompact ? 16 : 32,
+                    vertical: isCompact ? 16 : 40,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 920),
+                    child: Container(
+                      padding: EdgeInsets.all(isCompact ? 20 : 32),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: BorderRadius.circular(
+                          isCompact ? 18 : 25,
                         ),
-                        const SizedBox(height: 24),
-                        _fieldRow(isCompact, [
-                          _textFieldBlock(
-                            title: context.t.web.createEvent.name,
-                            controller: _titleController,
-                          ),
-                          _textFieldBlock(
-                            title: context.t.web.createEvent.location,
-                            controller: _locationController,
-                          ),
-                        ]),
-                        const SizedBox(height: 24),
-                        _textFieldBlock(
-                          title: context.t.web.createEvent.description,
-                          controller: _descriptionController,
-                          maxLines: 4,
-                        ),
-                        const SizedBox(height: 24),
-                        _fieldRow(isCompact, [
-                          _pickerBlock(
-                            title: context.t.web.createEvent.date,
-                            value:
-                                _selectedDate == null
-                                    ? context.t.web.createEvent.selectDate
-                                    : _formatDate(_selectedDate!),
-                            onPressed: _pickDate,
-                          ),
-                          _pickerBlock(
-                            title: context.t.web.createEvent.startTime,
-                            value:
-                                _startTime == null
-                                    ? context.t.web.createEvent.selectTime
-                                    : _formatTime(_startTime!),
-                            onPressed: () => _pickTime(isStart: true),
-                          ),
-                          _pickerBlock(
-                            title: context.t.web.createEvent.endTime,
-                            value:
-                                _endTime == null
-                                    ? context.t.web.createEvent.selectTime
-                                    : _formatTime(_endTime!),
-                            onPressed: () => _pickTime(isStart: false),
-                          ),
-                        ]),
-                        const SizedBox(height: 24),
-                        _fieldRow(isCompact, [
-                          SelectRoleDropDown(
-                            selectedRole: _selectedRole,
-                            onRoleChanged: (value) {
-                              setState(() {
-                                _selectedRole = value;
-                              });
-                            },
-                          ),
-                          _textFieldBlock(
-                            title: context.t.web.createEvent.workerCount,
-                            controller: _workerCountController,
-                            keyboardType: TextInputType.number,
-                          ),
-                          _textFieldBlock(
-                            title: context.t.web.createEvent.salary,
-                            controller: _salaryController,
-                            keyboardType: TextInputType.number,
-                          ),
-                        ]),
-                        const SizedBox(height: 36),
-                        Align(
-                          alignment:
-                              isCompact
-                                  ? Alignment.center
-                                  : Alignment.centerRight,
-                          child: SizedBox(
-                            width: isCompact ? double.infinity : null,
-                            height: 48,
-                            child: ElevatedButton(
-                              onPressed: _submit,
-                              child: Text(context.t.web.createEvent.submit),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            context.t.web.createEvent.formTitle,
+                            style: TextStyle(
+                              color: colorScheme.onSurface,
+                              fontWeight: FontWeight.bold,
+                              fontSize: isCompact ? 22 : 24,
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 24),
+                          _fieldRow(isCompact, [
+                            _textFieldBlock(
+                              title: context.t.web.createEvent.name,
+                              controller: _titleController,
+                            ),
+                            _textFieldBlock(
+                              title: context.t.web.createEvent.location,
+                              controller: _locationController,
+                            ),
+                          ]),
+                          const SizedBox(height: 24),
+                          _textFieldBlock(
+                            title: context.t.web.createEvent.description,
+                            controller: _descriptionController,
+                            maxLines: 4,
+                          ),
+                          const SizedBox(height: 24),
+                          _fieldRow(isCompact, [
+                            _pickerBlock(
+                              title: context.t.web.createEvent.date,
+                              value:
+                                  _selectedDate == null
+                                      ? context.t.web.createEvent.selectDate
+                                      : _formatDate(_selectedDate!),
+                              onPressed: _pickDate,
+                            ),
+                            _pickerBlock(
+                              title: context.t.web.createEvent.startTime,
+                              value:
+                                  _startTime == null
+                                      ? context.t.web.createEvent.selectTime
+                                      : _formatTime(_startTime!),
+                              onPressed: () => _pickTime(isStart: true),
+                            ),
+                            _pickerBlock(
+                              title: context.t.web.createEvent.endTime,
+                              value:
+                                  _endTime == null
+                                      ? context.t.web.createEvent.selectTime
+                                      : _formatTime(_endTime!),
+                              onPressed: () => _pickTime(isStart: false),
+                            ),
+                          ]),
+                          const SizedBox(height: 24),
+                          _fieldRow(isCompact, [
+                            SelectRoleDropDown(
+                              selectedRole: _selectedRole,
+                              onRoleChanged: (value) {
+                                setState(() {
+                                  _selectedRole = value;
+                                });
+                              },
+                            ),
+                            _textFieldBlock(
+                              title: context.t.web.createEvent.workerCount,
+                              controller: _workerCountController,
+                              keyboardType: TextInputType.number,
+                            ),
+                            _textFieldBlock(
+                              title: context.t.web.createEvent.salary,
+                              controller: _salaryController,
+                              keyboardType: TextInputType.number,
+                            ),
+                          ]),
+                          const SizedBox(height: 36),
+                          Align(
+                            alignment:
+                                isCompact
+                                    ? Alignment.center
+                                    : Alignment.centerRight,
+                            child: SizedBox(
+                              width: isCompact ? double.infinity : null,
+                              height: 48,
+                              child: ElevatedButton(
+                                onPressed: _submit,
+                                child: Text(context.t.web.createEvent.submit),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
-        );
-      },
-    ),
-  );
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
 
   Widget _fieldRow(bool isCompact, List<Widget> children) {
     if (isCompact) {
@@ -260,17 +263,20 @@ class _CreateEventViewState extends State<CreateEventView> {
       children: [
         Text(
           title,
-          style: const TextStyle(color: greenColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
           maxLines: maxLines,
           keyboardType: keyboardType,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             filled: true,
-            fillColor: backgroundTextFieldColor,
-            border: OutlineInputBorder(borderSide: BorderSide.none),
+            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+            border: const OutlineInputBorder(borderSide: BorderSide.none),
           ),
         ),
       ],
@@ -287,7 +293,10 @@ class _CreateEventViewState extends State<CreateEventView> {
       children: [
         Text(
           title,
-          style: const TextStyle(color: greenColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         SizedBox(

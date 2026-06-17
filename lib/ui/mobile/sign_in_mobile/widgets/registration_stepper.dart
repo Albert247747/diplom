@@ -132,49 +132,55 @@ class _StepProgressIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final inactiveColor =
-        Theme.of(context).inputDecorationTheme.fillColor ?? colorScheme.surface;
+        Theme.of(context).inputDecorationTheme.fillColor ??
+            colorScheme.surface;
 
     return Row(
-      children: List.generate(stepsCount, (index) {
-        final isActive = index <= currentStep;
-        final isLast = index == stepsCount - 1;
+      children: [
+        for (int index = 0; index < stepsCount; index++) ...[
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: 32,
+            height: 32,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: index <= currentStep
+                  ? colorScheme.primary
+                  : inactiveColor,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: index <= currentStep
+                    ? colorScheme.primary
+                    : greyColor,
+              ),
+            ),
+            child: Text(
+              '${index + 1}',
+              style: context.titleSmall.copyWith(
+                color: index <= currentStep
+                    ? whiteColor
+                    : colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
 
-        return Expanded(
-          child: Row(
-            children: [
-              AnimatedContainer(
+          if (index < stepsCount - 1)
+            Expanded(
+              child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                width: 32,
-                height: 32,
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                height: 4,
                 decoration: BoxDecoration(
-                  color: isActive ? colorScheme.primary : inactiveColor,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isActive ? colorScheme.primary : greyColor,
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  '${index + 1}',
-                  style: context.titleSmall.copyWith(
-                    color: isActive ? whiteColor : colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  color: index < currentStep
+                      ? colorScheme.primary
+                      : greyColor,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              if (!isLast)
-                Expanded(
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    height: 2,
-                    color:
-                        index < currentStep ? colorScheme.primary : greyColor,
-                  ),
-                ),
-            ],
-          ),
-        );
-      }),
+            ),
+        ],
+      ],
     );
   }
 }
